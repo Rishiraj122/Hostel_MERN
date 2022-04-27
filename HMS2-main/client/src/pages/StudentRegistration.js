@@ -13,6 +13,7 @@ function StudentRegistration() {
     const [registration, setRegistration] = useState('')
     const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
+	const [gender, setGender] = useState('')
 
 	async function registerUser(event) {
 		event.preventDefault()
@@ -24,6 +25,7 @@ function StudentRegistration() {
 			},
 			body: JSON.stringify({
 				name,
+				gender,
                 phone,
                 address,
                 roll,
@@ -51,6 +53,14 @@ function StudentRegistration() {
 					onChange={(e) => setName(e.target.value)}
 					type="text"
 					placeholder="Name"
+					class="input-control"
+				/>
+				<br />
+                <input
+					value={gender}
+					onChange={(e) => setGender(e.target.value)}
+					type="text"
+					placeholder="Gender"
 					class="input-control"
 				/>
 				<br />

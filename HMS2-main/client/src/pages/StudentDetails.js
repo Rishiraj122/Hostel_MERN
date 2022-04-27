@@ -53,9 +53,12 @@ export default class studentDetails extends React.Component{
         }
     }
 
-    async delete(value){
+    async delete(value,value2,value3){
         const roll={roll: value}
+        const room={room:value2}
+        const rid={rid: value3}
         const response = await axios.post('http://localhost:1337/api/studentdelete',roll);
+        const response2 = await axios.post('http://localhost:1337/api/roomdeallocate',rid);
         window.location.reload(false);
     }
 
@@ -93,7 +96,7 @@ export default class studentDetails extends React.Component{
                 <p><strong>E-mail ID:</strong> {student.email}</p>
                 <p><strong>Room:</strong> {student.room}</p>
                 <p><strong>Block:</strong> {student.block}</p>
-                <button class="btn btn-dark" onDoubleClick={()=>this.delete(student.roll)}>Delete</button>
+                <button class="btn btn-dark" onDoubleClick={()=>this.delete(student.roll,student.room,student.rid)}>Delete</button>
             </div>
             )}</div>
             }

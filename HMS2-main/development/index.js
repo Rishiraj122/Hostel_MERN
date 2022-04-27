@@ -5,6 +5,7 @@ const mongoose = require('mongoose')
 const User = require('./models/user.model')
 const Notice=require('./models/notice.model')
 const Student = require('./models/student.model')
+const Room = require('./models/room.model')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs') //a hashing mechanism
 const { db } = require('./models/notice.model')
@@ -49,8 +50,11 @@ app.post('/api/studentregister', async(req,res) =>{
 	console.log(req.body)
 	try{
 		const newPassword = await bcrypt.hash(req.body.password, 10)
+		gender=req.body.gender;
+		gender=gender.toLowerCase();
 		await Student.create({
 			name: req.body.name,
+			gender: gender,
 			phone: req.body.phone,
 			address: req.body.address,
 			roll: req.body.roll,
@@ -87,7 +91,9 @@ app.post('/api/allotroom', async(req,res) =>{
 		},
 		{
 			$set:{room: req.body.room,
-				block: req.body.block},
+				block: req.body.block,
+				rid: req.body.room+req.body.block,
+			},
 		})
 		res.json({status: 'ok'})
 	} catch(error){
@@ -152,6 +158,43 @@ app.post('/api/studentdelete', async(req,res)=>{
 	}
 })
 
+app.post('/api/roomdeallocate',async(req,res)=>{
+	try{
+		await Room.updateOne({
+			rid: req.body.rid,
+		},
+		{
+			$set:{room:req.body.room},
+			$set:{block:req.body.block},
+			$inc:{occupancy: -1}
+		}).exec();
+		res.json({status: 'ok'})
+		console.log(req.body.room);
+	} catch(error){
+		console.log(error)
+		res.json({status: 'error', error: err})
+	}
+})
+
+app.post('/api/room',async(req,res) => {
+	try{
+		await Room.updateOne({
+			room: req.body.room,
+			block: req.body.block
+		},
+		{
+			$set:{"room":req.body.room},
+			$set:{"block":req.body.block},
+			$set:{"rid":req.body.room+req.body.block},
+			$inc:{"occupancy": 1},
+		})
+		res.json({status: 'ok'})
+	} catch(error){
+		console.log(error)
+		res.json({status: 'error', error: err})
+	}
+})
+
 
 //This comes into play when a student tries to log in. It checks if the student exists
 // in the database or not. It verifies the password.
@@ -212,6 +255,22 @@ app.post('/api/login', async (req, res) => {
 		return res.json({ status: 'error', user: false })
 	}
 })
+
+app.get('/api/room',async (req,res)=>{
+	try{
+		const user = await Room.find({})
+		console.warn(user)
+		return res.json({user})
+	}
+	catch(error){
+		console.log({status:'error', error:'failed again'})
+	}
+})
+
+//Update Room Details.... 
+
+
+
 
 //Hosted in port: 3000, apis in 1337.
 app.listen(process.env.PORT||1337, () => {

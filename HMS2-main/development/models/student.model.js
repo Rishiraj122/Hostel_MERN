@@ -6,10 +6,13 @@ const notice=new mongoose.Schema({
     address: {type: String, required: true},
     room: {type: Number, required: false},
     roll: {type: Number, required: true},
+    gender: {type: String, required: true},
+    occupancy: {type: Number, required: false},
     registration: {type: Number, required: true},
     email: {type: String, required: true},
     password: {type: String, required: true},
-    block:{type: String, required: false}
+    block:{type: String, required: false},
+    rid: {type: String, required: false},
 },
     {collection: 'student-details'}
 )

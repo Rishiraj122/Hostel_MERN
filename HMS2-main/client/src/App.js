@@ -15,6 +15,7 @@ import StudentDetails from './pages/StudentDetails'
 import AdminNotice from './components/AdminNotice'
 import RoomAllotment from './components/RoomAllotment'
 import AllottedStudents from './components/AllottedStudents'
+import RoomStatus from './components/RoomStatus'
 
 //Route is the conditionally shown component that renders some UI when its path matches the current URL.
 // Browserrouter is a router that uses the HTML5 history API (pushState, replaceState and the popstate event) to keep your UI in sync with the URL.

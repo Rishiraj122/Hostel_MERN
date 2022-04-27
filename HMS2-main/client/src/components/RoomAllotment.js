@@ -2,18 +2,32 @@ import React from "react";
 import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import Header from './Header.js'
+import RoomStatus from './RoomStatus'
 
 
-//name phone address roll registration email password
 function RoomAllotment() {
 	const history = useHistory()
  //the first value is current state and second value is function used to update our state
 	const [roll, setRoll] = useState('')
     const [room, setRoom] = useState('')
 	const [block, setBlock] = useState('')
-
+	const [occupancy, setOccupancy] = useState('')
+	const item=[];
+	
 	async function registerUser(event) {
 		event.preventDefault()
+		//Update in Room database
+		const response2 = await fetch('http://localhost:1337/api/room',{
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				room,
+				block,
+				roll
+			})
+		})
 
 		const response = await fetch('http://localhost:1337/api/allotroom', {
 			method: 'POST',
@@ -22,14 +36,15 @@ function RoomAllotment() {
 			},
 			body: JSON.stringify({
                 roll,
-				room,
-				block
+				block,
+				room
 			}),
 		})
 
+		const data2 = await response2.json()
 		const data = await response.json()
 
-		if (data.status === 'ok') {
+		if (data.status && data2.status === 'ok') {
 			window.location.reload() // if registration is successfull 
 		}
 	}
@@ -38,6 +53,7 @@ function RoomAllotment() {
 	return (
 		<div>
 		<Header/>
+		<RoomStatus></RoomStatus>
 			<h1>Room Allotment</h1>
 			<form onSubmit={registerUser}>
                 <input
